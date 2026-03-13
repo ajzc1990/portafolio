@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <header id="inicio" class="hero-section visible">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 text-center text-lg-start">
+                    <h6 class="text-primary fw-bold text-uppercase mb-3">Disponible para nuevos retos</h6>
+                    <h1 class="display-3 fw-bold mb-4">Desarrollador <span class="text-gradient">Fullstack</span></h1>
+                    <p class="lead mb-5 text-muted">Especializado en <strong>Python-Django</strong> y <strong>PostgreSQL</strong>. Construyo aplicaciones robustas y escalables.</p>
+                    <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
+                        <a href="#proyectos" class="btn btn-primary btn-lg px-5 shadow">Ver Portafolio</a>
+                        <a href="#contacto" class="btn btn-outline-dark btn-lg px-5">Hablemos</a>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block text-center text-primary">
+                    <i class="bi bi-braces-asterisk display-1 opacity-25" style="font-size: 10rem;"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="proyectos" class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold">Proyectos <span class="text-primary">Destacados</span></h2>
+                <p class="text-muted">Lógica extraída directamente de la base de datos.</p>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for proyecto in proyectos %}
+                <div class="col">
+                    <div class="card project-card shadow-sm h-100">
+                        {% if proyecto.imagen %}
+                        <img src="{{ proyecto.imagen.url }}" class="card-img-top" alt="{{ proyecto.titulo }}">
+                        {% endif %}
+                        <div class="card-body p-4">
+                            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary mb-2">{{ proyecto.tecnologias }}</span>
+                            <h5 class="card-title fw-bold">{{ proyecto.titulo }}</h5>
+                            <p class="card-text text-muted small">{{ proyecto.descripcion_corta }}</p>
+                            <a href="{% url 'detalle' proyecto.id %}" class="btn btn-outline-primary btn-sm w-100 mt-2 fw-bold">Ver Detalles <i class="bi bi-play-circle ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center w-100">Pronto subiré nuevos proyectos.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section id="contacto" class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5">
+                    <h2 class="display-5 fw-bold mb-4">Hablemos de tu <span class="text-primary">proyecto</span></h2>
+                    <p class="lead text-muted mb-5">Estoy listo para ayudarte a construir tu idea desde cero.</p>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="bi bi-envelope-check-fill text-primary fs-4"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Email</h6>
+                            <p class="mb-0 text-muted">tu@email.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="card border-0 shadow-lg p-4 p-md-5" style="border-radius: 24px;">
+                        <form method="POST" id="contactForm">
+                            {% csrf_token %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-success alert-dismissible fade show">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="row g-3">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label small fw-bold">Nombre</label>
+                                    <input type="text" name="nombre" class="form-control bg-light border-0 py-3" placeholder="Tu nombre" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label small fw-bold">Email</label>
+                                    <input type="email" name="email" class="form-control bg-light border-0 py-3" placeholder="tu@correo.com" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Mensaje</label>
+                                <textarea name="mensaje" class="form-control bg-light border-0 py-3" rows="4" placeholder="¿Cómo puedo ayudarte?" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-sm">
+                                Enviar Mensaje <i class="bi bi-send ms-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

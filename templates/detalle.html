@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ proyecto.titulo }} | Detalle de Proyecto{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row mb-4">
+        <div class="col">
+            <a href="{% url 'home' %}#proyectos" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                <i class="bi bi-arrow-left me-2"></i>Volver al Portafolio
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-lg-8">
+            
+            <div class="ratio ratio-16x9 mb-5 shadow-lg rounded-4 overflow-hidden bg-black border border-light" style="border-width: 3px !important;">
+                {% if proyecto.video %}
+                    <video 
+                        autoplay 
+                        muted 
+                        loop 
+                        controls 
+                        playsinline 
+                        class="rounded-4"
+                        poster="{{ proyecto.imagen.url }}">
+                        <source src="{{ proyecto.video.url }}" type="video/mp4">
+                        <source src="{{ proyecto.video.url }}" type="video/webm">
+                        Tu navegador no soporta la reproducción de videos.
+                    </video>
+                {% else %}
+                    <img src="{{ proyecto.imagen.url }}" class="rounded-4" style="object-fit: cover;" alt="{{ proyecto.titulo }}">
+                {% endif %}
+            </div>
+
+            <h1 class="display-4 fw-bold mb-3 text-dark">{{ proyecto.titulo }}</h1>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                {% for tech in proyecto.tecnologias.split %}
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold shadow-sm">
+                        <i class="bi bi-cpu me-1"></i> {{ tech|cut:"," }}
+                    </span>
+                {% endfor %}
+            </div>
+
+            <hr class="my-5 opacity-25">
+
+            <div class="prose">
+                <h4 class="fw-bold mb-4 text-primary">Descripción del Proyecto</h4>
+                <p class="lead text-muted" style="white-space: pre-line; line-height: 1.8; text-align: justify;">
+                    {{ proyecto.descripcion_detallada }}
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4 sticky-top" style="top: 100px; border-radius: 24px; background: #ffffff;">
+                <h5 class="fw-bold mb-4 border-bottom pb-2">Detalles Técnicos</h5>
+                
+                <div class="mb-4">
+                    <label class="text-uppercase xsmall fw-bold text-secondary d-block mb-1" style="font-size: 0.75rem;">Categoría</label>
+                    <span class="text-dark fw-medium">Desarrollo Web Fullstack</span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="text-uppercase xsmall fw-bold text-secondary d-block mb-1" style="font-size: 0.75rem;">Fecha</label>
+                    <span class="text-dark">{{ proyecto.fecha_creacion|date:"M Y" }}</span>
+                </div>
+
+                <div class="d-grid gap-3 mt-5">
+                    {% if proyecto.link_github %}
+                    <a href="{{ proyecto.link_github }}" target="_blank" class="btn btn-dark py-3 fw-bold rounded-3 shadow-sm transition-hover">
+                        <i class="bi bi-github me-2"></i>Repositorio GitHub
+                    </a>
+                    {% endif %}
+                    
+                    {% if proyecto.link_video %}
+                    <a href="{{ proyecto.link_video }}" target="_blank" class="btn btn-danger py-3 fw-bold rounded-3 shadow-sm transition-hover">
+                        <i class="bi bi-youtube me-2"></i>Ver en YouTube
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-5 p-3 bg-light rounded-4 text-center">
+                    <p class="small text-muted mb-2">¿Necesitas un proyecto similar?</p>
+                    <a href="{% url 'home' %}#contacto" class="btn btn-primary btn-sm w-100 rounded-pill">¡Contáctame!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .ratio video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Asegura que el video llene el contenedor sin bordes negros */
+    }
+    .transition-hover:hover {
+        transform: translateY(-3px);
+        transition: all 0.3s ease;
+    }
+    .badge {
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
