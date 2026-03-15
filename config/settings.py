@@ -58,14 +58,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mi_portafolio_db',
-        'USER': 'postgres',
-        'PASSWORD': 'admin', 
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'OPTIONS': {
-            'client_encoding': 'UTF8',
-        },
+        'NAME': os.environ.get('POSTGRES_DB', 'mi_portafolio_db'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'tu_password_secreto'),
+        'HOST': os.environ.get('DB_HOST', 'db'),  # 'db' es el nombre del servicio en docker-compose
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 

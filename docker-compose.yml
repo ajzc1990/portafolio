@@ -3,25 +3,24 @@ version: '3.8'
 services:
   db:
     image: postgres:15
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=mi_portafolio_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=tu_password_secreto
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432" # Esto te permite conectar un programa como DBeaver o pgAdmin desde Windows
 
   web:
     build: .
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py collectstatic --no-input &&
-             gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    container_name: portafolio_web_local
+    # En local es mejor usar el runserver para ver los cambios en tiempo real (Hot Reload)
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
       - static_volume:/app/staticfiles
       - media_volume:/app/media
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000" # Mapeamos el puerto para que entres por localhost:8000
     env_file:
       - .env
     depends_on:
@@ -29,6 +28,7 @@ services:
 
   nginx:
     image: nginx:alpine
+    container_name: portafolio_nginx_local
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - static_volume:/app/staticfiles
@@ -37,6 +37,8 @@ services:
       - "80:80"
     depends_on:
       - web
+    # Lo comentamos por ahora para que no te de error si Nginx no encuentra los archivos estáticos aún
+    # profiles: ["production"] 
 
 volumes:
   postgres_data:
